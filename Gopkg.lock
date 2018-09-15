@@ -2,6 +2,14 @@
 
 
 [[projects]]
+  digest = "1:aba270497eb2d49f5cba6f4162d524b9a1195a24cbce8be20bf56a0051f47deb"
+  name = "github.com/blang/semver"
+  packages = ["."]
+  pruneopts = "NUT"
+  revision = "2ee87856327ba09384cabd113bc6b5d174e9ec0f"
+  version = "v3.5.1"
+
+[[projects]]
   branch = "master"
   digest = "1:23edf5aaca7a1f15d68215ac41595c0732152757e9d7b3f282821222784049f1"
   name = "github.com/gin-contrib/sse"
@@ -67,11 +75,12 @@
   revision = "57fdcb988a5c543893cc61bce354a6e24ab70022"
 
 [[projects]]
-  digest = "1:0be1cd4c73d5e22a30edcf32a18e9809a370a7a4a52c4f41a86070b34da93fef"
+  digest = "1:b12d535f03d4db1f9b4ddbccc554748cf39a15a7e921523abe91602bda90121e"
   name = "github.com/onsi/ginkgo"
   packages = [
     ".",
     "config",
+    "extensions/table",
     "internal/codelocation",
     "internal/containernode",
     "internal/failer",
@@ -203,9 +212,11 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/blang/semver",
     "github.com/gin-gonic/gin",
     "github.com/jessevdk/go-flags",
     "github.com/onsi/ginkgo",
+    "github.com/onsi/ginkgo/extensions/table",
     "github.com/onsi/gomega",
     "github.com/onsi/gomega/gbytes",
   ]

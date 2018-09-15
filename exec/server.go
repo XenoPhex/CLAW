@@ -10,8 +10,9 @@ import (
 )
 
 type Opts struct {
-	Port    int  `long:"port" default:"8080" env:"PORT" description:"App server port"`
-	Release bool `long:"release" description:"Enable release mode (aka production) for app server"`
+	AvailableVersions Versions `long:"available-versions" required:"true" value-name:"0.0.0[,0.1.0...]" env:"AVAILABLE_VERSIONS" description:"List of available stable V6 versions"`
+	Port              int      `long:"port" default:"8080" env:"PORT" description:"App server port"`
+	Release           bool     `long:"release" description:"Enable release mode (aka production) for app server"`
 }
 
 func Start(args []string) error {
@@ -20,6 +21,9 @@ func Start(args []string) error {
 	if err != nil {
 		return err
 	}
+
+	request.StableVersions = opts.AvailableVersions.List
+	fmt.Println("Running with V6 Stable Versions:", request.StableVersions)
 
 	if opts.Release {
 		gin.SetMode(gin.ReleaseMode)
@@ -30,6 +34,8 @@ func Start(args []string) error {
 
 	r := gin.Default()
 	r.GET("/ping", request.Ping)
+	r.GET("/edge", request.Edge)
+	r.GET("/stable", request.Stable)
 	r.Run(fmt.Sprintf(":%d", opts.Port))
 	return nil
 }

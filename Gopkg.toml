@@ -45,3 +45,7 @@
   non-go = true
   go-tests = true
   unused-packages = true
+
+[[constraint]]
+  name = "github.com/blang/semver"
+  version = "3.5.1"

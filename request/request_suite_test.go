@@ -30,6 +30,12 @@ var _ = SynchronizedBeforeSuite(func() []byte {
 	gin.SetMode(gin.TestMode)                // disable gin's logging
 })
 
+func AddQuery(request *http.Request, name string, value string) {
+	queries := request.URL.Query()
+	queries.Add(name, value)
+	request.URL.RawQuery = queries.Encode()
+}
+
 func RunRequest(request *http.Request, requestToTest func(c *gin.Context)) *http.Response {
 	w := httptest.NewRecorder()
 	router := gin.Default()
