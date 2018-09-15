@@ -23,7 +23,7 @@ var _ = Describe("Edge", func() {
 		Expect(err).ToNot(HaveOccurred())
 	})
 
-	Describe("invalid architectures", func() {
+	Describe("invalid query parameters", func() {
 		Describe("empty architecture", func() {
 			It("returns back a Precondition Failed (412) with a message listing the valid arches", func() {
 				response = RunRequest(request, Edge)
@@ -45,17 +45,19 @@ var _ = Describe("Edge", func() {
 		})
 	})
 
-	DescribeTable("valid architectures",
-		func(arch string, expectedFilename string) {
-			AddQuery(request, "arch", arch)
-			response = RunRequest(request, Edge)
-			Expect(response.StatusCode).To(Equal(http.StatusFound))
-			Expect(response.Header.Get("Location")).To(MatchRegexp("https://cf-cli-releases.s3.amazonaws.com/master/%s", expectedFilename))
-		},
-		Entry("32 bit Linux binary", "linux32", "cf-cli_edge_linux_i686.tgz"),
-		Entry("64 bit Linux binary", "linux64", "cf-cli_edge_linux_x86-64.tgz"),
-		Entry("64 bit Mac OS X binary", "macosx64", "cf-cli_edge_osx.tgz"),
-		Entry("32 bit Windows binary", "windows32", "cf-cli_edge_win32.zip"),
-		Entry("64 bit Windows binary", "windows64", "cf-cli_edge_winx64.zip"),
-	)
+	Describe("valid query parameters", func() {
+		DescribeTable("specified architecture redirects to specified binary/installer",
+			func(arch string, expectedFilename string) {
+				AddQuery(request, "arch", arch)
+				response = RunRequest(request, Edge)
+				Expect(response.StatusCode).To(Equal(http.StatusFound))
+				Expect(response.Header.Get("Location")).To(MatchRegexp("https://cf-cli-releases.s3.amazonaws.com/master/%s", expectedFilename))
+			},
+			Entry("32 bit Linux binary", "linux32", "cf-cli_edge_linux_i686.tgz"),
+			Entry("64 bit Linux binary", "linux64", "cf-cli_edge_linux_x86-64.tgz"),
+			Entry("64 bit Mac OS X binary", "macosx64", "cf-cli_edge_osx.tgz"),
+			Entry("32 bit Windows binary", "windows32", "cf-cli_edge_win32.zip"),
+			Entry("64 bit Windows binary", "windows64", "cf-cli_edge_winx64.zip"),
+		)
+	})
 })
