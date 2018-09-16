@@ -17,6 +17,8 @@ const (
 	TestURL = "/some-url"
 )
 
+var router *gin.Engine
+
 func TestRequest(t *testing.T) {
 	RegisterFailHandler(Fail)
 	RunSpecs(t, "Request Suite")
@@ -30,16 +32,18 @@ var _ = SynchronizedBeforeSuite(func() []byte {
 	gin.SetMode(gin.TestMode)                // disable gin's logging
 })
 
+var _ = BeforeEach(func() {
+	router = gin.Default()
+})
+
 func AddQuery(request *http.Request, name string, value string) {
 	queries := request.URL.Query()
 	queries.Add(name, value)
 	request.URL.RawQuery = queries.Encode()
 }
 
-func RunRequest(request *http.Request, requestToTest func(c *gin.Context)) *http.Response {
+func RunRequest(request *http.Request) *http.Response {
 	w := httptest.NewRecorder()
-	router := gin.Default()
-	router.GET(request.URL.EscapedPath(), requestToTest)
 	router.ServeHTTP(w, request)
 	return w.Result()
 }

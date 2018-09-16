@@ -20,16 +20,18 @@ var _ = Describe("Stable", func() {
 	)
 
 	BeforeEach(func() {
+		router.GET("/stable", Stable)
+
 		StableVersions = []string{"6.0.0", "6.1.0", "6.1.1", "6.2.0"}
 		var err error
-		request, err = http.NewRequest("GET", TestURL, nil)
+		request, err = http.NewRequest("GET", "/stable", nil)
 		Expect(err).ToNot(HaveOccurred())
 	})
 
 	Describe("invalid query parameters", func() {
 		Describe("empty architecture", func() {
 			It("returns back a Precondition Failed (412) with a message listing the valid arches", func() {
-				response = RunRequest(request, Stable)
+				response = RunRequest(request)
 				Expect(response.StatusCode).To(Equal(http.StatusPreconditionFailed))
 				Eventually(BufferReader(response.Body)).Should(Say("Invalid 'release' value, please select one of the following architectures: debian32, debian64, linux32-binary, linux64-binary, macosx64, macosx64-binary, redhat32, redhat64, windows32, windows32-exe, windows64, windows64-exe"))
 			})
@@ -41,7 +43,7 @@ var _ = Describe("Stable", func() {
 			})
 
 			It("returns back a Precondition Failed (412) with a message listing the valid arches", func() {
-				response = RunRequest(request, Stable)
+				response = RunRequest(request)
 				Expect(response.StatusCode).To(Equal(http.StatusPreconditionFailed))
 				Eventually(BufferReader(response.Body)).Should(Say("Invalid 'release' value, please select one of the following architectures: debian32, debian64, linux32-binary, linux64-binary, macosx64, macosx64-binary, redhat32, redhat64, windows32, windows32-exe, windows64, windows64-exe"))
 			})
@@ -53,7 +55,7 @@ var _ = Describe("Stable", func() {
 			})
 
 			It("returns back a Precondition Failed (412) with a message listing the valid releases", func() {
-				response = RunRequest(request, Stable)
+				response = RunRequest(request)
 				Expect(response.StatusCode).To(Equal(http.StatusPreconditionFailed))
 				Eventually(BufferReader(response.Body)).Should(Say("Invalid 'version' value, please select one of the following versions: %s", strings.Join(StableVersions, ", ")))
 			})
@@ -66,7 +68,7 @@ var _ = Describe("Stable", func() {
 				requestedVersion := "6.1.0"
 				AddQuery(request, "release", arch)
 				AddQuery(request, "version", requestedVersion)
-				response = RunRequest(request, Stable)
+				response = RunRequest(request)
 
 				Expect(response.StatusCode).To(Equal(http.StatusFound))
 				expectedFilename = fmt.Sprintf(expectedFilename, requestedVersion)
@@ -89,7 +91,7 @@ var _ = Describe("Stable", func() {
 		DescribeTable("valid architectures without a specified version for latest",
 			func(arch string, expectedFilename string) {
 				AddQuery(request, "release", arch)
-				response = RunRequest(request, Stable)
+				response = RunRequest(request)
 
 				Expect(response.StatusCode).To(Equal(http.StatusFound))
 

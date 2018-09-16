@@ -18,15 +18,17 @@ var _ = Describe("Edge", func() {
 	)
 
 	BeforeEach(func() {
+		router.GET("/edge", Edge)
+
 		var err error
-		request, err = http.NewRequest("GET", TestURL, nil)
+		request, err = http.NewRequest("GET", "/edge", nil)
 		Expect(err).ToNot(HaveOccurred())
 	})
 
 	Describe("invalid query parameters", func() {
 		Describe("empty architecture", func() {
 			It("returns back a Precondition Failed (412) with a message listing the valid arches", func() {
-				response = RunRequest(request, Edge)
+				response = RunRequest(request)
 				Expect(response.StatusCode).To(Equal(http.StatusPreconditionFailed))
 				Eventually(BufferReader(response.Body)).Should(Say("Invalid 'arch' value, please select one of the following architectures: linux32, linux64, macosx64, windows32, windows64"))
 			})
@@ -38,7 +40,7 @@ var _ = Describe("Edge", func() {
 			})
 
 			It("returns back a Precondition Failed (412) with a message listing the valid arches", func() {
-				response = RunRequest(request, Edge)
+				response = RunRequest(request)
 				Expect(response.StatusCode).To(Equal(http.StatusPreconditionFailed))
 				Eventually(BufferReader(response.Body)).Should(Say("Invalid 'arch' value, please select one of the following architectures: linux32, linux64, macosx64, windows32, windows64"))
 			})
@@ -49,7 +51,7 @@ var _ = Describe("Edge", func() {
 		DescribeTable("specified architecture redirects to specified binary/installer",
 			func(arch string, expectedFilename string) {
 				AddQuery(request, "arch", arch)
-				response = RunRequest(request, Edge)
+				response = RunRequest(request)
 				Expect(response.StatusCode).To(Equal(http.StatusFound))
 				Expect(response.Header.Get("Location")).To(MatchRegexp("https://cf-cli-releases.s3.amazonaws.com/master/%s", expectedFilename))
 			},

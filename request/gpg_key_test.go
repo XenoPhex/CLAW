@@ -17,14 +17,16 @@ var _ = Describe("GPG Key", func() {
 	)
 
 	BeforeEach(func() {
+		router.GET("/gpg-key", GPGKey) // used by multiple URLs, using this for test
+
 		var err error
-		request, err = http.NewRequest("GET", TestURL, nil)
+		request, err = http.NewRequest("GET", "/gpg-key", nil)
 		Expect(err).ToNot(HaveOccurred())
 		GPGKeyBody = "some-GPG-key"
 	})
 
 	It("returns the GPG key", func() {
-		response = RunRequest(request, GPGKey)
+		response = RunRequest(request)
 		Expect(response.StatusCode).To(Equal(http.StatusOK))
 		Expect(response.Header.Get("Content-Type")).To(Equal("text/plain; charset=utf-8"))
 		Eventually(BufferReader(response.Body)).Should(Say("some-GPG-key"))
