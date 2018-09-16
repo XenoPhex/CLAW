@@ -1,7 +1,7 @@
 NODES ?= 4
 GOSRC = $(shell find . -name "*.go" ! -name "*test.go" ! -name "*fake*")
 
-all : test build
+all : build test
 
 build : claw
 
