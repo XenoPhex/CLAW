@@ -42,10 +42,11 @@ func Server(args []string) (*gin.Engine, string, error) {
 
 	r := gin.Default()
 	r.GET("/debian/cli.cloudfoundry.org.key", request.GPGKey)
+	r.GET("/debian/dists/*page", request.DebianDist)
 	r.GET("/edge", request.Edge)
 	r.GET("/fedora/cli.cloudfoundry.org.key", request.GPGKey)
+	r.GET("/homebrew/*filename", request.Homebrew)
 	r.GET("/ping", request.Ping)
 	r.GET("/stable", request.Stable)
-	r.GET("/homebrew/*filename", request.Homebrew)
 	return r, listenAddr, nil
 }
