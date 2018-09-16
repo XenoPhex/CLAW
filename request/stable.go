@@ -12,6 +12,10 @@ var StableVersions []string
 func Stable(c *gin.Context) {
 	requestedArch := c.Query("release")
 	version := c.DefaultQuery("version", StableVersions[len(StableVersions)-1])
+	redirectToStable(requestedArch, version, c)
+}
+
+func redirectToStable(requestedArch string, version string, c *gin.Context) {
 	if invalidVersion(version) {
 		internal.InvalidReleaseVersionError(StableVersions, c)
 		return
