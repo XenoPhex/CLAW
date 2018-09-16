@@ -20,9 +20,10 @@ var _ = Describe("Stable", func() {
 	)
 
 	BeforeEach(func() {
+		StableVersions = []string{"6.0.0", "6.1.0", "6.1.1", "6.2.0"}
+
 		router.GET("/stable", Stable)
 
-		StableVersions = []string{"6.0.0", "6.1.0", "6.1.1", "6.2.0"}
 		var err error
 		request, err = http.NewRequest("GET", "/stable", nil)
 		Expect(err).ToNot(HaveOccurred())

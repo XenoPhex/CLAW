@@ -46,5 +46,6 @@ func Server(args []string) (*gin.Engine, string, error) {
 	r.GET("/fedora/cli.cloudfoundry.org.key", request.GPGKey)
 	r.GET("/ping", request.Ping)
 	r.GET("/stable", request.Stable)
+	r.GET("/homebrew/*filename", request.Homebrew)
 	return r, listenAddr, nil
 }
