@@ -89,7 +89,7 @@ var _ = Describe("Stable", func() {
 			Entry("64 bit Windows binary", "windows64-exe", "cf-cli_%s_winx64.zip"),
 		)
 
-		DescribeTable("valid architectures without a specified version for latest",
+		DescribeTable("without version redirects to latested binary for specified architecture",
 			func(arch string, expectedFilename string) {
 				AddQuery(request, "release", arch)
 				response = RunRequest(request)

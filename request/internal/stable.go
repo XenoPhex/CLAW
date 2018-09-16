@@ -36,6 +36,10 @@ func StableURL(arch string, version string) string {
 	return fmt.Sprintf("https://s3-us-west-1.amazonaws.com/cf-cli-releases/releases/v%s/%s", version, filename)
 }
 
+func StableURLFromFile(filename string, version string) string {
+	return fmt.Sprintf("https://s3-us-west-1.amazonaws.com/cf-cli-releases/releases/v%s/%s", version, filename)
+}
+
 func SupportedStableArch(arch string) bool {
 	for supported := range stableFilenames {
 		if arch == supported {
