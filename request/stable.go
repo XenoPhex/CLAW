@@ -10,11 +10,9 @@ import (
 var StableVersions []string
 
 func Stable(c *gin.Context) {
-	requestedArch, _ := c.GetQuery("release")
-	version, providedVersion := c.GetQuery("version")
-	if !providedVersion {
-		version = StableVersions[len(StableVersions)-1]
-	} else if invalidVersion(version) {
+	requestedArch := c.Query("release")
+	version := c.DefaultQuery("version", StableVersions[len(StableVersions)-1])
+	if invalidVersion(version) {
 		internal.InvalidReleaseVersionError(StableVersions, c)
 		return
 	}
