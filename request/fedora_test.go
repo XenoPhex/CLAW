@@ -24,4 +24,19 @@ var _ = Describe("Fedora/Redhat Repository", func() {
 			Expect(response.Header.Get("Location")).To(Equal("https://cf-cli-rpm-repo.s3.amazonaws.com/cloudfoundry-cli.repo"))
 		})
 	})
+
+	Describe("FedoraRepoData", func() {
+		BeforeEach(func() {
+			router.GET("/fedora/repodata/*page", FedoraRepoData)
+		})
+
+		It("redirects to the equivilant /fedora/repodata URL", func() {
+			request, err := http.NewRequest("GET", "/fedora/repodata/bob", nil)
+			Expect(err).ToNot(HaveOccurred())
+
+			response := RunRequest(request)
+			Expect(response.StatusCode).To(Equal(http.StatusFound))
+			Expect(response.Header.Get("Location")).To(Equal("https://cf-cli-rpm-repo.s3.amazonaws.com/bob"))
+		})
+	})
 })

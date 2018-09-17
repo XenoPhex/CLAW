@@ -4,11 +4,14 @@ import (
 	"fmt"
 	"net/http"
 
+	"code.cloudfoundry.org/claw/request/internal"
 	"github.com/gin-gonic/gin"
 )
 
-const fedoraRepoRoot = "https://cf-cli-rpm-repo.s3.amazonaws.com"
-
 func FedoraRepo(c *gin.Context) {
-	c.Redirect(http.StatusFound, fmt.Sprintf("%s/cloudfoundry-cli.repo", fedoraRepoRoot))
+	c.Redirect(http.StatusFound, internal.FedoraRepoURL("/cloudfoundry-cli.repo"))
+}
+
+func FedoraRepoData(c *gin.Context) {
+	c.Redirect(http.StatusFound, internal.FedoraRepoURL(fmt.Sprintf("/repodata%s", c.Param("page"))))
 }
