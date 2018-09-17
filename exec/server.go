@@ -48,6 +48,7 @@ func Server(args []string) (*gin.Engine, string, error) {
 	r.GET("/fedora/cli.cloudfoundry.org.key", request.GPGKey)
 	r.GET("/fedora/cloudfoundry-cli.repo", request.FedoraUserConfig)
 	r.GET("/fedora/repodata/*page", request.FedoraRepoData)
+	r.GET("/fedora/releases/*page", request.FedoraReleases)
 	r.GET("/homebrew/*filename", request.Homebrew)
 	r.GET("/ping", request.Ping)
 	r.GET("/stable", request.Stable)
