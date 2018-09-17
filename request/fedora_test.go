@@ -10,21 +10,6 @@ import (
 )
 
 var _ = Describe("Fedora/Redhat Repository", func() {
-	Describe("FedoraRepo", func() {
-		BeforeEach(func() {
-			router.GET("/fedora/cloudfoundry-cli.repo", FedoraRepo)
-		})
-
-		It("redirects to the Fedora repository file", func() {
-			request, err := http.NewRequest("GET", "/fedora/cloudfoundry-cli.repo", nil)
-			Expect(err).ToNot(HaveOccurred())
-
-			response := RunRequest(request)
-			Expect(response.StatusCode).To(Equal(http.StatusFound))
-			Expect(response.Header.Get("Location")).To(Equal("https://cf-cli-rpm-repo.s3.amazonaws.com/cloudfoundry-cli.repo"))
-		})
-	})
-
 	Describe("FedoraRepoData", func() {
 		BeforeEach(func() {
 			router.GET("/fedora/repodata/*page", FedoraRepoData)
@@ -36,7 +21,22 @@ var _ = Describe("Fedora/Redhat Repository", func() {
 
 			response := RunRequest(request)
 			Expect(response.StatusCode).To(Equal(http.StatusFound))
-			Expect(response.Header.Get("Location")).To(Equal("https://cf-cli-rpm-repo.s3.amazonaws.com/bob"))
+			Expect(response.Header.Get("Location")).To(Equal("https://cf-cli-rpm-repo.s3.amazonaws.com/repodata/bob"))
+		})
+	})
+
+	Describe("FedoraUserConfig", func() {
+		BeforeEach(func() {
+			router.GET("/fedora/cloudfoundry-cli.repo", FedoraUserConfig)
+		})
+
+		It("redirects to the Fedora repository configuration file", func() {
+			request, err := http.NewRequest("GET", "/fedora/cloudfoundry-cli.repo", nil)
+			Expect(err).ToNot(HaveOccurred())
+
+			response := RunRequest(request)
+			Expect(response.StatusCode).To(Equal(http.StatusFound))
+			Expect(response.Header.Get("Location")).To(Equal("https://cf-cli-rpm-repo.s3.amazonaws.com/cloudfoundry-cli.repo"))
 		})
 	})
 })
